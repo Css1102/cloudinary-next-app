@@ -12,6 +12,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+   "ignoreDeprecations": "6.0",
     "baseUrl": ".", // Required for path aliases
     "incremental": true,
     "plugins": [
@@ -21,8 +22,6 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@client/prisma": ["app/generated/prisma"]
-
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

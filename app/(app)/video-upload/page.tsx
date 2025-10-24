@@ -1,5 +1,5 @@
 "use client"
-import React,{use, useState} from 'react'
+import React,{ useState} from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 function VideoUpload() {
@@ -9,9 +9,10 @@ function VideoUpload() {
   const[error,setError]=useState<string>("")
 const[isUploading,setIsUploading]=useState<boolean>(false)
 const router=useRouter()
-const MAX_SIZE=70*1024*1024
+const MAX_SIZE=1000*1024*1024
 
 const handleSubmit=async(e:React.FormEvent)=>{
+  e.preventDefault()
 if(!file){
 return;
 }
@@ -20,16 +21,18 @@ alert("File size too large");
 return;
 }
 setIsUploading(true)
-const formdata=new FormData()
-formdata.append('file',file);
-formdata.append('title',title);
-formdata.append('description',description);
-formdata.append("orignalSize",file.size.toString())
+const formData=new FormData()
+formData.append('file',file);
+formData.append('title',title);
+formData.append('description',description);
+formData.append("originalSize",file.size.toString())
 try{
-const response=await axios.post('/api/video-upload',formdata)
+const response=await axios.post('/api/video-upload',formData)
 if(response.status!=200){
+console.log("error is coming here")
 throw new Error("error in uploading the video")
 }
+router.push('/')
 }
 catch(error:any){
 console.log(error)
@@ -38,7 +41,7 @@ setError(error)
 }
   return (
           <div className="container mx-auto p-4">
-          <h1 className="text-2xl font-bold mb-4">Upload Video</h1>
+          <h1 className="text-2xl font-bold text-center mb-4">Upload Video</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="label">
@@ -48,7 +51,7 @@ setError(error)
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full text-slate-200"
                 required
               />
             </div>
@@ -59,7 +62,7 @@ setError(error)
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="textarea textarea-bordered w-full"
+                className="textarea textarea-bordered w-full text-slate-200"
               />
             </div>
             <div>
@@ -69,11 +72,20 @@ setError(error)
               <input
                 type="file"
                 accept="video/*"
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
-                className="file-input file-input-bordered w-full"
+                onChange={(e) => {
+                  console.log(e.target)
+                  setFile(e.target.files?.[0] || null)}}
+                className="file-input text-slate-200 text-base font-medium file-input-bordered w-full"
                 required
               />
             </div>
+              {isUploading && (
+                <div className="mt-4">
+                  <progress className="progress progress-primary w-full"></progress>
+                </div>
+              )}
+
+
             <button
               type="submit"
               className="btn btn-primary"
@@ -81,6 +93,7 @@ setError(error)
             >
               {isUploading ? "Uploading..." : "Upload Video"}
             </button>
+            {error && <h1 className='text-red-700 text-sm'>Error in uploading video</h1>}
           </form>
         </div>
   )
