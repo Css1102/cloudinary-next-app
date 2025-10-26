@@ -14,6 +14,9 @@ RUN npm install
 # Copy the rest of the app
 COPY . .
 
+# Copy environment variables (optional: only if needed during build)
+COPY .env .env
+
 # Generate Prisma client
 RUN npx prisma generate
 
@@ -34,6 +37,8 @@ COPY --from=builder /app .
 # Install only production dependencies
 RUN npm install --omit=dev
 
+# Expose port
 EXPOSE 3000
 
+# Start the app
 CMD ["npm", "start"]
