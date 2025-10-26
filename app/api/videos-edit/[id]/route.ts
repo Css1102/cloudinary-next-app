@@ -26,7 +26,10 @@ compressedSize:string,
 duration:number,
 publicId:string,
 }
-export async function GET(request: NextRequest, {params}:{params:{id:string}}) {
+export async function GET(request: NextRequest,{
+  params,
+}: {
+  params: Promise<{ id: string }>}) {
     const {id}=await params
   const { userId: clerkId } = await auth();
   if (!clerkId) {
@@ -45,8 +48,11 @@ export async function GET(request: NextRequest, {params}:{params:{id:string}}) {
   return new Response(JSON.stringify(video), { status: 200 });
 }
 
-export async function PUT(request:NextRequest,{params}:{params:{id:string}}){
-const {id}=await params
+export async function PUT(request:NextRequest,{
+  params,
+}: {
+  params: Promise<{ id: string }>}){
+const {id}= await params
   const { userId: clerkId } = await auth();
 
 

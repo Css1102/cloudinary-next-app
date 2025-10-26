@@ -1,19 +1,17 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextRequest, NextResponse } from "next/server";
 import { clerkClient } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { getAuth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
 export  async function POST(
-  req: NextApiRequest,
-  res: NextApiResponse<{ success?: boolean; error?: string }>
+  req: NextRequest,
 ) {
   const { userId } = getAuth(req);
 
   if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return Response.json({status:401,error:"Unauthorized"})
   }
 
   try {
@@ -34,9 +32,9 @@ const clerkUser = await clerkUserRes.json();
       },
     });
 
-    return NextResponse.json({status:200});
+    return Response.json({status:200});
   } catch (err) {
     console.error("Failed to sync Clerk user:", err);
-    return NextResponse.json({status:500,error:"could not verify the user"})
+    return Response.json({status:500,error:"could not verify the user"})
   }
 }
