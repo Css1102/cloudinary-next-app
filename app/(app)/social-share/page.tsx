@@ -1,6 +1,5 @@
 "use client"
 export const dynamic = "force-dynamic";
-
 import React,{useState,useEffect,useRef} from 'react'
 import { CldImage } from 'next-cloudinary'
 
